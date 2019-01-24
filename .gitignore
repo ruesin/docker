@@ -1,2 +1,3 @@
 /projects
 /projects/*
+./src/docker-compose.yml
