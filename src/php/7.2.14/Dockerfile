@@ -1,0 +1,5 @@
+FROM ruesin/php:latest
+
+RUN mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini" \
+    &&  sed -i "s#;error_log = php_errors.log*#derror_log = /php_errors.log#g" ${PHP_INI_DIR}/php.ini \
+    &&  sed -i "s#cgi.fix_pathinfo=1*#cgi.fix_pathinfo=0#g" ${PHP_INI_DIR}/php.ini 
