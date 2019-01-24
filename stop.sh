@@ -1,5 +1,3 @@
 #!/bin/sh
 
-workdir=$(cd $(dirname $0); pwd)
-
-cd ${workdir}/src && docker-compose stop
+cd $(cd $(dirname $0); pwd) && docker-compose -f "src/docker-compose.yml" stop

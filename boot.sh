@@ -10,16 +10,13 @@ fi
 if [ ! -d "${workdir}/projects/" ];then
     if [ ! -z "$peoject_path" ]; then
         if [ -d "$peoject_path" ]; then
-            echo 1
             ln -s ${peoject_path} ${workdir}/projects
         else 
-        echo 2
             mkdir ${workdir}/projects
         fi
     else
-    echo 3
         mkdir ${workdir}/projects
     fi
 fi
 
-cd ${workdir}/src && docker-compose up -d
+cd ${workdir} && docker-compose -f "src/docker-compose.yml" up -d
