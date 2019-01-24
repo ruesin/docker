@@ -21,7 +21,7 @@ services:
     container_name : php7
     depends_on:
       - mysql
-    ports :
+    # ports :
       # - "9000:9000"
     volumes:
       - ./projects/:/var/www/html/
