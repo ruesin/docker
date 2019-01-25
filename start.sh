@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# Create and start containers
+
 peoject_path=$1
 workdir=$(cd $(dirname $0); pwd)
 
