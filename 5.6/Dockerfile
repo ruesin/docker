@@ -1,4 +1,4 @@
-FROM php:7.2.14-fpm
+FROM php:5.6-fpm
 
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
@@ -10,10 +10,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install -j$(nproc) mysqli \
     && docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install pcntl
+    && docker-php-ext-install pcntl \
+    && docker-php-ext-install curl
 
-RUN pecl install redis-4.2.0 swoole-4.2.12\
-    && docker-php-ext-enable redis swoole
+RUN pecl install swoole-1.9.5\
+    && docker-php-ext-enable swoole
 
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
