@@ -8,8 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libpng-dev \
         procps \
         curl libcurl4-openssl-dev \
-        unzip \
-        libicu-dev libxml2-dev \
+        unzip libicu-dev libxml2-dev libxslt1-dev \
         && apt-get autoclean \
         && rm -rf /var/lib/apt/lists/*
 
