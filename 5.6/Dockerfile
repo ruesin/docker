@@ -37,7 +37,7 @@ RUN docker-php-ext-install -j$(nproc) iconv \
     && echo "==> Install redis extension..." \ 
     && pecl install redis-4.0.1 \
     && docker-php-ext-enable redis \
-    && pecl install xdebug-2.6.0 \
+    && pecl install xdebug-2.5.5 \
     && docker-php-ext-enable xdebug
 
 # timezone
