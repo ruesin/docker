@@ -36,7 +36,9 @@ RUN docker-php-ext-install -j$(nproc) iconv \
     && docker-php-ext-enable swoole \
     && echo "==> Install redis extension..." \ 
     && pecl install redis-4.0.1 \
-    && docker-php-ext-enable redis
+    && docker-php-ext-enable redis \
+    && pecl install xdebug-2.6.0 \
+    && docker-php-ext-enable xdebug
 
 # timezone
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
