@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-        procps \
+        procps vim \
         curl libcurl4-openssl-dev \
         unzip libzip-dev libicu-dev libxml2-dev libxslt1-dev \
         && apt-get autoclean \

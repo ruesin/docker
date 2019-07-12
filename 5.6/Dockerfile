@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-        procps \
+        procps vim \
         curl libcurl4-openssl-dev \
         unzip libicu-dev libxml2-dev libxslt1-dev \
         && apt-get autoclean \
@@ -31,6 +31,7 @@ RUN docker-php-ext-install -j$(nproc) iconv \
     sysvsem \
     xmlrpc \
     xsl \
+    # 1.9.23
     && echo "==> Install swoole extension..." \ 
     && pecl install swoole-1.9.5\
     && docker-php-ext-enable swoole \
