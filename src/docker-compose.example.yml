@@ -1,0 +1,52 @@
+version: "3"
+services:
+  mysql :
+    image: mysql:5.6
+    container_name : mysql
+    ports :
+      # - "3306:3306"
+      - "3306"
+    volumes :
+      #- ./mysql/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
+      - ../data/mysql/data:/var/lib/mysql
+    environment :
+      MYSQL_ROOT_PASSWORD: root
+    command: --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --explicit_defaults_for_timestamp
+    networks:
+      - lnmpNet
+  php72:
+    image: ruesin/php:7.2
+    container_name: php72
+    entrypoint: /bin/sh
+    command: /start-php
+    volumes:
+      # setting and startup php
+      - ./php/start-php:/start-php:ro
+      - ../projects/:/var/www/html/
+    depends_on:
+      - mysql
+    # ports :
+      # - "9000:9000"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - lnmpNet
+  nginx:
+    image: nginx:1.14.0
+    container_name : nginx
+    depends_on :
+      - php7
+    ports:
+      # - "80:80"
+      - "80"
+      # - "433:433"
+    volumes:
+      - ../projects/:/var/www/html/
+      - ./nginx/conf/:/etc/nginx/conf.d/
+      - ../data/nginx/logs:/var/log/nginx/
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+    - lnmpNet
+networks:
+  lnmpNet:

@@ -1,0 +1,14 @@
+/projects
+/projects/*
+/src/docker-compose.yml
+
+
+/src/nginx/conf/*
+![src/nginx/conf/default.conf]
+![src/nginx/conf/test.conf]
+
+/data/nginx/logs/*
+!/data/nginx/logs/README.md
+
+/data/mysql/data/*
+!/data/mysql/data/README.md
