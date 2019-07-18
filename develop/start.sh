@@ -7,7 +7,7 @@ workdir=$(cd $(dirname $0); pwd)
 APP_NAME=$1
 
 if [ ! -n "$APP_NAME" ] ;then
-    APP_NAME="lnmp"
+    APP_NAME="php"
 fi
 
 PROJECT_PATH="${HOME}/projects/"
