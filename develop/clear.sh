@@ -1,4 +1,10 @@
 #!/bin/sh
 
 # Stop and remove containers, networks, images, and volumes
-cd $(cd $(dirname $0); pwd) && docker-compose -f "src/docker-compose.yml" down
+APP_NAME=$1
+
+if [ ! -n "$APP_NAME" ] ;then
+    APP_NAME="lnmp"
+fi
+
+cd $(cd $(dirname $0); pwd) && docker-compose -f "src/docker-compose-${APP_NAME}.yml"  -p ${APP_NAME} down

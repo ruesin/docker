@@ -2,17 +2,29 @@
 
 # Create and start containers
 
-peoject_path=$1
 workdir=$(cd $(dirname $0); pwd)
 
-if [ ! -f "${workdir}/src/docker-compose.yml" ];then
-    cp ${workdir}/src/docker-compose.example.yml ${workdir}/src/docker-compose.yml
+APP_NAME=$1
+
+if [ ! -n "$APP_NAME" ] ;then
+    APP_NAME="lnmp"
+fi
+
+PROJECT_PATH="${HOME}/projects/"
+
+if [ "$APP_NAME" == "golang" ] ;then
+    PROJECT_PATH="${HOME}/go/"
+fi
+
+
+if [ ! -f "${workdir}/src/docker-compose-${APP_NAME}.yml" ];then
+    cp ${workdir}/src/docker-compose-${APP_NAME}.example.yml ${workdir}/src/docker-compose-${APP_NAME}.yml
 fi
 
 if [ ! -d "${workdir}/projects/" ];then
-    if [ ! -z "$peoject_path" ]; then
-        if [ -d "$peoject_path" ]; then
-            ln -s ${peoject_path} ${workdir}/projects
+    if [ ! -z "$PROJECT_PATH" ]; then
+        if [ -d "$PROJECT_PATH" ]; then
+            ln -s ${PROJECT_PATH} ${workdir}/projects
         else 
             mkdir ${workdir}/projects
         fi
@@ -21,4 +33,4 @@ if [ ! -d "${workdir}/projects/" ];then
     fi
 fi
 
-cd ${workdir} && docker-compose -f "src/docker-compose.yml" up -d
+cd ${workdir} && docker-compose -f "src/docker-compose-${APP_NAME}.yml" -p ${APP_NAME} up -d
