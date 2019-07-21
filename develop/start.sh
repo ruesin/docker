@@ -17,8 +17,8 @@ if [ "$APP_NAME" == "golang" ] ;then
 fi
 
 
-if [ ! -f "${workdir}/src/docker-compose-${APP_NAME}.yml" ];then
-    cp ${workdir}/src/docker-compose-${APP_NAME}.example.yml ${workdir}/src/docker-compose-${APP_NAME}.yml
+if [ ! -f "${workdir}/yaml/${APP_NAME}.yml" ];then
+    cp ${workdir}/yaml/example/${APP_NAME}.yml ${workdir}/src/${APP_NAME}.yml
 fi
 
 if [ ! -d "${workdir}/projects/" ];then
@@ -33,4 +33,4 @@ if [ ! -d "${workdir}/projects/" ];then
     fi
 fi
 
-cd ${workdir} && docker-compose -f "src/docker-compose-${APP_NAME}.yml" -p ${APP_NAME} up -d
+cd ${workdir} && docker-compose -f "yaml/${APP_NAME}.yml" -p ${APP_NAME} up -d
