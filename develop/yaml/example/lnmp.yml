@@ -14,7 +14,7 @@ services:
     command: --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --explicit_defaults_for_timestamp
     networks:
       - lnmpNet
-  php72:
+  php:
     image: ruesin/php:7.2
     container_name: php72
     entrypoint: /bin/sh
@@ -35,7 +35,7 @@ services:
     image: nginx:1.14.0
     container_name : nginx
     depends_on :
-      - php7
+      - php
     ports:
       # - "80:80"
       - "80"

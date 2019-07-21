@@ -1,6 +1,6 @@
 version: "3"
 services:
-  php72:
+  php:
     image: ruesin/php:7.2
     container_name : php72
     entrypoint: /bin/sh
@@ -10,8 +10,8 @@ services:
       - ./src/php/start-php:/start-php:ro
     environment:
       - TZ=Asia/Shanghai
-    ports:
-      #- "9501:9501"
+    # ports:
+      # - "9501:9501"
     networks:
       - phpNet
 networks:

@@ -18,7 +18,7 @@ fi
 
 
 if [ ! -f "${workdir}/yaml/${APP_NAME}.yml" ];then
-    cp ${workdir}/yaml/example/${APP_NAME}.yml ${workdir}/src/${APP_NAME}.yml
+    cp ${workdir}/yaml/example/${APP_NAME}.yml ${workdir}/yaml/${APP_NAME}.yml
 fi
 
 if [ ! -d "${workdir}/projects/" ];then
