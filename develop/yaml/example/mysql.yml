@@ -6,7 +6,7 @@ services:
     ports :
       - "3306:3306"
     volumes :
-      #- ./mysql/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
+      #- ../src/mysql/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
       - ../data/mysql/data:/var/lib/mysql
     environment :
       MYSQL_ROOT_PASSWORD: root

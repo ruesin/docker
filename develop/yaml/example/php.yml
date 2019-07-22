@@ -7,7 +7,7 @@ services:
     command: /start-php
     volumes:
       - ../projects/:/var/www/html/
-      - ./src/php/start-php:/start-php:ro
+      - ../src/php/start-php:/start-php:ro
     environment:
       - TZ=Asia/Shanghai
     # ports:
