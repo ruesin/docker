@@ -1,0 +1,15 @@
+version: "3"
+services:
+  python37:
+    image: ruesin/python:3.7
+    container_name : python37
+    volumes:
+      - ../projects/:/var/www/html/
+    environment:
+      - TZ=Asia/Shanghai
+      - COMPOSE_PROJECT_NAME=python
+    networks:
+      - pythonNet
+    tty: true
+networks:
+  pythonNet:
