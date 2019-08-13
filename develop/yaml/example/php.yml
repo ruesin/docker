@@ -8,6 +8,7 @@ services:
     volumes:
       - ../projects/:/var/www/html/
       - ../src/php/start-php:/start-php:ro
+      - ~/.ssh/:/root/.ssh/
     environment:
       - TZ=Asia/Shanghai
     # ports:

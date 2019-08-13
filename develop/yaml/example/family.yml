@@ -23,6 +23,7 @@ services:
       # setting and startup php
       - ../src/php/start-php:/start-php:ro
       - ../projects/:/var/www/html/
+      - ~/.ssh/:/root/.ssh/
     depends_on:
       - mysql
     ports :
