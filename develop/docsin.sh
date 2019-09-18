@@ -2,6 +2,10 @@
 
 DOCSIN_WORK_DIR=$(cd $(dirname $0); pwd)
 
+if [ -f "${DOCSIN_WORK_DIR}/config" ];then
+    source ${DOCSIN_WORK_DIR}/config
+fi
+
 DOCSIN_APP_NAME=$1
 
 DOCSIN_OPERATION=$2
