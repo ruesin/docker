@@ -1,51 +1,62 @@
 FROM php:7.1.30-fpm
 
-ENV TZ=Asia/Shanghai
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN set -eux; \
+    \
+    ## mirrors
+    # sed -i "s@http://deb.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
+    # sed -i "s@http://security.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
+    \
+	savedAptMark="$(apt-mark showmanual)"; \
+    apt-get update; \
+    # Necessary software
+    apt-get install -y procps vim; \
+    \
+    # Build dependencies
+    apt-get install -y --no-install-recommends \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
-        procps vim \
+        libssl-dev \
         curl libcurl4-openssl-dev \
-        unzip libicu-dev libxml2-dev libxslt1-dev \
-        && apt-get autoclean \
-        && rm -rf /var/lib/apt/lists/*
-
-
-# php extension
-RUN docker-php-ext-install -j$(nproc) iconv \
-    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd \
-    && docker-php-ext-install -j$(nproc) mysqli \
-    pdo_mysql \
-    pcntl \
-    curl \
-    zip \
-    bcmath \
-    gettext \
-    intl \
-    shmop \
-    soap \
-    sockets \
-    sysvsem \
-    xmlrpc \
-    xsl \
-    && echo "==> Install swoole 4.3.5 extension..." \ 
-    && pecl install swoole-4.3.5\
-    && docker-php-ext-enable swoole \
-    && echo "==> Install redis 5.0.0 extension..." \ 
-    && pecl install redis-5.0.0 \
-    && docker-php-ext-enable redis \
-    && echo "==> Install xdebug 2.7.2 extension..." \ 
-    && pecl install xdebug-2.7.2 \
-    && docker-php-ext-enable xdebug
-
-# timezone
-RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone && dpkg-reconfigure --frontend noninteractive tzdata \
-    && sed -i "s#;date.timezone =.*#date.timezone = ${TZ}#g" ${PHP_INI_DIR}/php.ini-production \
-    && sed -i "s#;date.timezone =.*#date.timezone = ${TZ}#g" ${PHP_INI_DIR}/php.ini-development \
+        unzip libicu-dev libxml2-dev libxslt1-dev; \
+        \
+        apt-get autoclean && apt-get autoremove && apt-get clean; \
+        rm -rf /var/lib/apt/lists/*; \
+        \
+    # extension
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/; \
+    docker-php-ext-install -j$(nproc) iconv gd mysqli pdo_mysql \
+        pcntl curl zip bcmath gettext intl shmop soap sockets sysvsem xmlrpc xsl; \
+    # swoole
+    curl -SL "https://github.com/swoole/swoole-src/archive/v4.4.7.tar.gz" -o /tmp/swoole.tar.gz; \
+    mkdir -p /tmp/swoole; \
+    tar -xf /tmp/swoole.tar.gz -C /tmp/swoole --strip-components=1; \
+    cd /tmp/swoole && phpize; \
+    ./configure --enable-mysqlnd --enable-openssl --enable-http2 --enable-sockets; \
+    make -j$(nproc) && make install && docker-php-ext-enable swoole && make clean; \
+    \
+    # redis
+    pecl install redis-5.0.0 && docker-php-ext-enable redis; \
+    \
+    # xdebug
+    pecl install xdebug-2.7.2 && docker-php-ext-enable xdebug; \
+    \
+    # timezone
+    ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone; \
+    dpkg-reconfigure --frontend noninteractive tzdata; \
+    echo "date.timezone=Asia/Shanghai" > ${PHP_INI_DIR}/conf.d/zzz-overrides-timezone.ini; \
+    \
+    # config
+    echo "error_log=/php_errors.log" > ${PHP_INI_DIR}/conf.d/zzz-overrides-errors.ini; \
+    \
     # composer
-    && php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');" && \
-    php composer-setup.php --install-dir=/usr/bin --filename=composer && \
-    php -r "unlink('composer-setup.php');"
+    # ENV COMPOSER_ALLOW_SUPERUSER 1
+    curl -sS https://getcomposer.org/installer | php; \
+    mv composer.phar /usr/local/bin/composer; \
+    composer self-update --clean-backups; \
+    php -v; \
+    # clean
+    apt-mark auto '.*' > /dev/null; \
+    apt-mark manual $savedAptMark > /dev/null; \
+    apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
+    rm -rf /tmp/*;
