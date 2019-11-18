@@ -6,7 +6,7 @@ services:
     entrypoint: /bin/sh
     command: /start-php
     volumes:
-      - ../projects/:/var/www/html/
+      - ../volumes/:/var/www/html/
       - ../src/php/start-php:/start-php:ro
       - ~/.ssh/:/root/.ssh/
     environment:

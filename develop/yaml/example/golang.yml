@@ -4,7 +4,7 @@ services:
     image: ruesin/golang:1.12
     container_name : golang112
     volumes:
-      - ../projects/:/var/www/html/
+      - ../volumes/:/var/www/html/
     environment:
       - TZ=Asia/Shanghai
       - COMPOSE_PROJECT_NAME=golang
