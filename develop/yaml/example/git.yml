@@ -1,0 +1,15 @@
+version: "3"
+services:
+  git:
+    image: ruesin/git:latest
+    container_name : git
+    volumes:
+      - ../volumes/git/:/git/
+    working_dir: /git
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - gitNet
+    tty: true
+networks:
+  gitNet:
