@@ -1,0 +1,16 @@
+version: "3"
+services:
+  redis :
+    image: redis:5.0.5
+    container_name : redis5
+    ports :
+      - "6379:6379"
+    volumes :
+      - ${DOCSIN_WORKER_DIR}/data/redis/data:/usr/local/redis/data
+      - ${DOCSIN_WORKER_DIR}/src/redis/redis.conf:/usr/local/redis/redis.conf
+    command: redis-server /usr/local/redis/redis.conf
+    #command: redis-server --requirepass ${pwd} --notify-keyspace-events Eglx
+    networks:
+      - redisNet
+networks:
+  redisNet:

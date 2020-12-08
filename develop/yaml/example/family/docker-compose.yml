@@ -1,0 +1,92 @@
+version: "3"
+services:
+  mysql :
+    image: mysql:5.6
+    container_name : mysql
+    ports :
+      - "3306:3306"
+      # - "3306"
+    volumes :
+      #- ${DOCSIN_WORKER_DIR}/src/mysql/my.cnf:/etc/mysql/mysql.conf.d/my.cnf
+      - ${DOCSIN_WORKER_DIR}/data/mysql/data:/var/lib/mysql
+    environment :
+      MYSQL_ROOT_PASSWORD: root
+    command: --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --explicit_defaults_for_timestamp
+    networks:
+      - familyNet
+  php:
+    image: ruesin/php:7.2
+    container_name: php72
+    entrypoint: /bin/sh
+    command: /start-php
+    volumes:
+      # setting and startup php
+      - ${DOCSIN_WORKER_DIR}/src/php/start-php:/start-php:ro
+      - ${DOCSIN_WORKER_DIR}/volumes/:/var/www/html/
+      - ~/.ssh/:/root/.ssh/
+    depends_on:
+      - mysql
+    ports :
+      - "9000:9000"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - familyNet
+  nginx:
+    image: nginx:1.14.0
+    container_name : nginx
+    depends_on :
+      - php
+    ports:
+      - "80:80"
+      # - "80"
+      # - "433:433"
+    volumes:
+      - ${DOCSIN_WORKER_DIR}/volumes/:/var/www/html/
+      - ${DOCSIN_WORKER_DIR}/src/nginx/conf/:/etc/nginx/conf.d/
+      - ${DOCSIN_WORKER_DIR}/data/nginx/logs:/var/log/nginx/
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+    - familyNet
+  redis :
+    image: redis:5.0.5
+    container_name : redis5
+    depends_on :
+      - nginx
+    ports :
+      - "6379:6379"
+    volumes :
+      - ${DOCSIN_WORKER_DIR}/data/redis/data:/usr/local/redis/data
+      - ${DOCSIN_WORKER_DIR}/src/redis/redis.conf:/usr/local/redis/redis.conf
+    command: redis-server /usr/local/redis/redis.conf
+    networks:
+      - familyNet
+  golang:
+    image: ruesin/golang:1.12
+    container_name : golang
+    depends_on :
+      - nginx
+    volumes:
+      - ${DOCSIN_WORKER_DIR}/volumes/:/var/www/html/
+    environment:
+      - TZ=Asia/Shanghai
+      - COMPOSE_PROJECT_NAME=golang
+    networks:
+      - familyNet
+    tty: true
+  python37:
+    image: ruesin/python:3.7
+    container_name : python37
+    depends_on :
+      - nginx
+    volumes:
+      - ${DOCSIN_WORKER_DIR}/volumes/:/var/www/html/
+    environment:
+      - TZ=Asia/Shanghai
+      - COMPOSE_PROJECT_NAME=python
+    networks:
+      - familyNet
+    tty: true
+networks:
+  familyNet:
