@@ -8,7 +8,12 @@ RUN set -eux; \
     \
     apt-get update; \
     # Necessary software
-    apt-get install -y procps vim; \
+    apt-get install -y --no-install-recommends \
+        procps vim \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libxml2-dev libxslt1-dev; \
     \
 	savedAptMark="$(apt-mark showmanual)"; \
     \
@@ -61,5 +66,3 @@ RUN set -eux; \
     apt-mark manual $savedAptMark > /dev/null; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /tmp/*;
-
-# apt install vim
