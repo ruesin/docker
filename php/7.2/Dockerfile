@@ -6,10 +6,11 @@ RUN set -eux; \
     # sed -i "s@http://deb.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
     # sed -i "s@http://security.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
     \
-	savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
     # Necessary software
     apt-get install -y procps vim; \
+    \
+	savedAptMark="$(apt-mark showmanual)"; \
     \
     # Build dependencies
     apt-get install -y --no-install-recommends \
@@ -60,3 +61,5 @@ RUN set -eux; \
     apt-mark manual $savedAptMark > /dev/null; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     rm -rf /tmp/*;
+
+# apt install vim
