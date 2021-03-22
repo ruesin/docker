@@ -4,9 +4,9 @@ RUN set -eux; \
     \
     sed -i "s@http://deb.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
     sed -i "s@http://security.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
-    echo "color_prompt=yes" >> /root/.bashrc \
-    echo "PS1='\[\e[31m\]\$ \[\e[m\]\[\033[01;34m\]\w\[\033[00m\]\n\[\e[31m\]\$ \[\e[m\]'" >> /root/.bashrc \
-    echo "alias ll='ls $LS_OPTIONS -l'" >> /root/.bashrc \
+    echo "color_prompt=yes" >> /root/.bashrc; \
+    echo "PS1='\[\e[31m\]\$ \[\e[m\]\[\033[01;34m\]\w\[\033[00m\]\n\[\e[31m\]\$ \[\e[m\]'" >> /root/.bashrc; \
+    echo "alias ll='ls \$LS_OPTIONS -l'" >> /root/.bashrc; \
     \
     apt update; \
     \
