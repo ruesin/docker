@@ -9,6 +9,7 @@ RUN set -eux; \
     echo "alias ll='ls \$LS_OPTIONS -l'" >> /root/.bashrc; \
     \
     apt update; \
+    apt install -y git; \
     \
     \
     echo "start..." && \
@@ -18,5 +19,8 @@ RUN set -eux; \
     sed -i "s#cgi.fix_pathinfo=1*#cgi.fix_pathinfo=0#g" ${PHP_INI_DIR}/php.ini && \
     composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 
+RUN mkdir -p /root/.ssh
 
-    
+ADD ./.ssh/ /root/.ssh/
+
+RUN chmod 600 /root/.ssh/id_rsa
