@@ -19,7 +19,8 @@ RUN set -eux; \
     sed -i "s#cgi.fix_pathinfo=1*#cgi.fix_pathinfo=0#g" ${PHP_INI_DIR}/php.ini && \
     composer config -g repo.packagist composer https://mirrors.aliyun.com/composer/
 
-RUN mkdir -p /root/.ssh
+RUN echo "zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20170718/xdebug.so" > /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+    mkdir -p /root/.ssh 
 
 ADD ./.ssh/ /root/.ssh/
 
