@@ -6,7 +6,6 @@ RUN set -eux; \
     # sed -i "s@http://deb.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
     # sed -i "s@http://security.debian.org@http://mirrors.tuna.tsinghua.edu.cn@g" /etc/apt/sources.list; \
     \
-	savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
     # Necessary software
     apt-get install -y --no-install-recommends \
@@ -14,8 +13,10 @@ RUN set -eux; \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libpng-dev \
+        unzip libzip-dev \
         libxml2-dev libxslt1-dev; \
     \
+    savedAptMark="$(apt-mark showmanual)"; \
     # Build dependencies
     apt-get install -y --no-install-recommends \
         libfreetype6-dev \
@@ -45,6 +46,12 @@ RUN set -eux; \
     \
     # xdebug
     pecl install xdebug-2.7.2 && docker-php-ext-enable xdebug; \
+    \
+    # Unable to load dynamic library
+    echo "/usr/lib64" >> /etc/ld.so.conf && \
+    echo "/usr/lib" >> /etc/ld.so.conf && \
+    echo "/usr/local/lib" >> /etc/ld.so.conf && \
+    echo "/usr/local/lib64" >> /etc/ld.so.conf; \
     \
     # timezone
     ln -snf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo Asia/Shanghai > /etc/timezone; \
