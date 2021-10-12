@@ -1,4 +1,4 @@
-FROM php:7.3.6-fpm
+FROM php:7.3.29-fpm
 
 RUN set -eux; \
     \
@@ -9,7 +9,12 @@ RUN set -eux; \
 	savedAptMark="$(apt-mark showmanual)"; \
     apt-get update; \
     # Necessary software
-    apt-get install -y procps vim; \
+    apt-get install -y --no-install-recommends \
+        procps vim \
+        libfreetype6-dev \
+        libjpeg62-turbo-dev \
+        libpng-dev \
+        libxml2-dev libxslt1-dev; \
     \
     # Build dependencies
     apt-get install -y --no-install-recommends \
