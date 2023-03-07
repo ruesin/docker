@@ -1,4 +1,4 @@
-FROM node:14.18.1-slim
+FROM node:14.8-slim
 
 # 安装最新的chrome开发包和字体，以支持主要字符集(中文，日语，阿拉伯语，希伯来语，泰国语和一些其他)
 # 注意: 这安装了必要的库，以使捆绑版本的Chromium、Puppeteer 安装、运行。
