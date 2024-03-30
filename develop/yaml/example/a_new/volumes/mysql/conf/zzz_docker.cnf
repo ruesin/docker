@@ -1,0 +1,8 @@
+[mysqld]
+#sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION'
+sql_mode = ''
+
+# slow_query_log = ON
+# slow_query_log_file = /var/log/mysql/slow/query_slow.log
+# long_query_time = 3
+# log_queries_not_using_indexes = 1

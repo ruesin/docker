@@ -1,0 +1,68 @@
+version: "3"
+services:
+  mysql:
+    image: mysql:5.6
+    container_name : mysql
+    ports :
+      - "3306:3306"
+      # - "3306"
+    volumes :
+      - ./volumes/mysql/data/:/var/lib/mysql
+      - ./volumes/mysql/conf/zzz_docker.cnf:/etc/mysql/conf.d/zzz_docker.cnf
+      - ./volumes/mysql/init:/docker-entrypoint-initdb.d/
+      # - ./volumes/mysql/log/error.log:/var/log/mysql/error.log
+      # - ./volumes/mysql/log/:/var/log/mysql/
+      - ./volumes/mysql/log/slow/:/var/log/mysql/slow/
+      - ./volumes/mysql/share/:/tmp/share/
+    environment :
+      MYSQL_ROOT_PASSWORD: root
+    command: --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --explicit_defaults_for_timestamp
+    networks:
+      - lnmpNet
+  php:
+    image: ruesin/php:7.2
+    container_name: php72
+    volumes:
+      - ./volumes/php/zzzzz-docker.ini:/usr/local/etc/php/conf.d/zzzzz-docker.ini
+      - ./volumes/php/php-fpm.d/zzz-docker.conf:/usr/local/etc/php-fpm.d/zzz-docker.conf
+      - ./volumes/html/:/var/www/html/
+    depends_on:
+      - mysql
+    ports :
+      - "9000:9000"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - lnmpNet
+  nginx:
+    image: nginx:1.14.0
+    container_name : nginx
+    depends_on :
+      - php
+    ports:
+      - "80:80"
+      # - "443:443"
+    volumes:
+      - ./volumes/nginx/conf/conf.d/:/etc/nginx/conf.d/
+      - ./volumes/nginx/conf/nginx.conf:/etc/nginx/nginx.conf
+      - ./volumes/nginx/logs:/var/log/nginx/
+      - ./volumes/html/:/var/www/html/
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - lnmpNet
+  redis :
+    image: redis:5.0.5
+    container_name : redis5
+    depends_on :
+      - nginx
+    ports :
+      - "6379:6379"
+    volumes :
+      - ./volumes/redis/data:/usr/local/redis/data
+      - ./volumes/redis/conf/redis.conf:/usr/local/redis/redis.conf
+    command: redis-server /usr/local/redis/redis.conf
+    networks:
+      - lnmpNet
+networks:
+  lnmpNet:
