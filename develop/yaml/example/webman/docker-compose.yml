@@ -1,0 +1,39 @@
+version: "3"
+services:
+  db_webman:
+    image: mysql:5.6
+    container_name : db_webman
+    ports :
+      - "3306:3306"
+    volumes :
+      - ./volumes/mysql/data/:/var/lib/mysql
+      - ./volumes/mysql/conf/zzz_docker.cnf:/etc/mysql/conf.d/zzz_docker.cnf
+      - ./volumes/mysql/init:/docker-entrypoint-initdb.d/
+      # - ./volumes/mysql/log/error.log:/var/log/mysql/error.log
+      # - ./volumes/mysql/log/:/var/log/mysql/
+      - ./volumes/mysql/log/slow/:/var/log/mysql/slow/
+      - ./volumes/mysql/share/:/tmp/share/
+    environment :
+      MYSQL_ROOT_PASSWORD: root
+    command: --default-authentication-plugin=mysql_native_password --innodb_use_native_aio=0 --explicit_defaults_for_timestamp
+  php_webman:
+    image: ruesin/php:webman
+    container_name: php_webman
+    restart: unless-stopped
+    
+    volumes:
+      - ./volumes/php/zzzzz-docker.ini:/usr/local/etc/php/conf.d/zzzzz-docker.ini
+      - ./volumes/html/:/app/
+    command: ["php", "/app/webman/start.php", "start"]
+    stdin_open: true
+    tty: true
+    depends_on:
+      - db_webman
+    ports :
+      - "8787:8787"
+    environment:
+      - TZ=Asia/Shanghai
+    networks:
+      - webmanNet
+networks:
+  webmanNet:
